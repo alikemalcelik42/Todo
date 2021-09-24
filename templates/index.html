@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container" style="margin-top: 100px;">
+        <h3>
+            Todo Uygulaması
+        </h3>
+        <hr>
+
+        <form action="/add" method="post">
+            <div class="form-group">
+                <label for="title">Başlık</label>
+                <input type="text" class="form-control" id="title" maxlength="80" name="title">
+                <small class="form-text text-muted">En fazla 80 karakter olabilir.</small>
+            </div>
+            <div class="form-group">
+                <label for="content">İçerik</label>
+                <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Ekle</button>
+        </form>
+
+        <hr>
+
+        {% if todos|length > 0 %}
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Başlık</th>
+                        <th scope="col">İçerik</th>
+                        <th scope="col">Durum</th>
+                        <th scope="col">Güncelle</th>
+                        <th scope="col">Sil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for todo in todos %}
+                        <tr>
+                            <th scope="row">{{ todo["id"] }}</th>
+                            
+                            {% if todo["title"]|length > 25 %}
+                                <td><a href="/detail/{{ todo["id"] }}">{{ todo["title"][0:25] }}...</a></td>
+                            {% else %}
+                                <td><a href="/detail/{{ todo["id"] }}">{{ todo["title"] }}</a></td>
+                            {% endif %}
+
+                            {% if todo["content"]|length > 25 %}
+                                <td>{{ todo["content"][0:25] }}...</td>
+                            {% else %}
+                                <td>{{ todo["content"] }}</td>
+                            {% endif %}
+
+                            {% if todo["complete"] == True %}
+                                <td>Tamamlandı</td>
+                                <td><a class="btn btn-warning" href="/complete/{{ todo["id"] }}" role="button">Tamamlanmadı</a></td>
+                            {% else %}
+                                <td>Tamamlanmadı</td>
+                                <td><a class="btn btn-success" href="/complete/{{ todo["id"] }}" role="button">Tamamlandı</a></td>
+                            {% endif %}
+                            <td><a class="btn btn-danger" href="/remove/{{ todo["id"] }}" role="button">Sil</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                Hiç todo yok!
+        </div>
+
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>
